@@ -14,11 +14,6 @@
 # - DOCKER_PASSWORD
 
 name: Build and Deploy Application
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 0a4c8816bb8c5e1c3583bfcdc02e73fe87a651de
 env:
   # This is the global resource prefix for this deployment
   # Use lower case letters and numbers only
