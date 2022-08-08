@@ -1,3 +1,18 @@
+# This workflow performs the following:
+# - Database configuration
+# - Provisioning Azure Services  
+# - Create the spring-petclinic-AKS App on Docker
+# - Create an Azure Container Registry 
+# - Push your app to the container registry
+# - Create a Kubernetes Cluster on AKS 
+# - Deploy the image to your Kubernetes cluster
+# - Verify your container image
+#
+# Secrets required to be in place:
+# - AZURE_CREDENTIALS
+# - DOCKER_USERNAME
+# - DOCKER_PASSWORD
+
 name: Build and Deploy Application
 
 env:
@@ -93,3 +108,4 @@ jobs:
          kubectl run springpetclinicaks --image=petclinicaksacr.azurecr.io/petclinic:latest
          kubectl expose pod petclinic --type=LoadBalancer --port=80 --target-port=8080
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
+        
