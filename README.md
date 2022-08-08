@@ -1,57 +1,108 @@
-# Project Name
+# Spring Boot PetClinic Application Deployed to Azure Kubernetes Service (AKS)
+## Contents
+Description: 
 
-(short, 1-3 sentenced, description of the project)
+## Deploy Spring Boot apps using Azure Spring Cloud and Azure Services:
 
-## Features
+--
+Tech stack:
 
-This project framework provides the following features:
+- Azure
+- Azure MySql DB
+- Azure Container Registry (ACR)
+- Azure Kubernetes Service (AKS)
+- Azure Infra (Vnet/Subnet)
+- Azure Fire Wall
+- Azure Bastion
+- Github Actions
+- Bicep
+- Docker
+- Maven
+- Springboot
 
-* Feature 1
-* Feature 2
-* ...
+---
+
+## Introduction
+
+This is a quickstart template. It deploys the following:
+
+* Deploying PetClinic App:
+  * Database configuration
+  * Provisioning Azure Infra Services  
+  * Create the spring-petclinic-AKS App on Docker
+  * Create an Azure Container Registry
+  * Push your app to the container registry
+  * Create a Kubernetes Cluster on AKS
+  * Deploy the image to your Kubernetes cluster
+  * Verify your container image
+
+* PetClinic on Automated CI/CD with GitHub Action  
+  * CI/CD on GitHub Action
+  * CI/CD in action with the app
+
+> Refer to the [App Templates](https://github.com/microsoft/App-Templates) repo Readme for more samples that are compatible with [AzureAccelerators](https://github.com/Azure/azure-dev/).
+
+## Prerequisites
+- Local shell with Azure CLI installed or [Azure Cloud Shell](https://ms.portal.azure.com/#cloudshell/)
+- Azure Subscription, on which you are able to create resources and assign permissions
+  - View your subscription using ```az account show``` 
+  -  If you don't have an account, you can [create one for free](https://azure.microsoft.com/free).  
 
 ## Getting Started
+### Fork the repository
 
-### Prerequisites
+Fork the repository by clicking the 'Fork' button on the top right of the page.
+This creates a local copy of the repository for you to work in. 
 
-(ideally very short, if any)
+### Azure Configuration for GitHub  
 
-- OS
-- Library version
-- ...
+The newly created GitHub repo uses GitHub Actions to deploy Azure resources and application code automatically. Your subscription is accessed using an Azure Service Principal. This is an identity created for use by applications, hosted services, and automated tools to access Azure resources. The following steps show how to [set up GitHub Actions to deploy Azure applications](https://github.com/Azure/actions-workflow-samples/blob/master/assets/create-secrets-for-GitHub-workflows.md)
 
-### Installation
+Create an [Azure Service Principal](https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli) with **contributor** permissions on the subscription. The subscription-level permission is needed because the deployment includes creation of the resource group itself.
+ * Run the following [az cli](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest) command, either locally on your command line or on the Cloud Shell. 
+   Replace {subscription-id} with the id of the subscription in GUID format. {service-principal-name} can be any alfanumeric string, e.g. GithubPrincipal
+    ```bash  
+       az ad sp create-for-rbac --name {service-principal-name} --role contributor --scopes /subscriptions/{subscription-id} --sdk-auth      
+      ```
+ * The command should output a JSON object similar to this:
+ ```
+      {
+        "clientId": "<GUID>",
+        "clientSecret": "<GUID>",
+        "subscriptionId": "<GUID>",
+        "tenantId": "<GUID>",
+        "activeDirectoryEndpointUrl": "<URL>",
+        "resourceManagerEndpointUrl": "<URL>",
+        "activeDirectoryGraphResourceId": "<URL>",
+        "sqlManagementEndpointUrl": "<URL>",
+        "galleryEndpointUrl": "<URL>",
+        "managementEndpointUrl": "<URL>"
+      }
+   ```
+ * Store the output JSON as the value of a GitHub secret named 'AZURE_CREDENTIALS'
+   + Under your repository name, click Settings. 
+   + In the "Security" section of the sidebar, select Secrets. 
+   + At the top of the page, click New repository secret
+   + Provide the secret name as AZURE_CREDENTIALS
+   + Add the output JSON as secret value
 
-(ideally very short)
+### GitHub Workflow setup
+1. Change the value of DEPLOYMENT_NAME and DEPLOYMENT_REGION in the deploy-JavaAKSBicep.yml workflow file under .github/workflows. 
+   * The value for DEPLOYMENT_NAME should be globally unique, e.g. yournamedemo1
+   * Use only lowercase letters and numbers for DEPLOYMENT_NAME. 
+   * DEPLOYMENT_REGION should contain an Azure region name, e.g. eastus, westus, southus...etc...
+2. Run the workflow 
+   * If workflows are enabled for this repository it should run automatically. To enable the workflow run automatically, Go to Actions and enable the workflow if needed.
+   * Workflow can be manually run 
+     + Under your repository name, click Actions .
+     + In the left sidebar, click the workflow "Build and Deploy Application".
+     + Above the list of workflow runs, select Run workflow .
+     + Use the Branch dropdown to select the workflow's main branch, Click Run workflow .
+  
 
-- npm install [package name]
-- mvn install
-- ...
+# Pet Clinic Website
 
-### Quickstart
-(Add steps to get up and running quickly)
-
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
+<img width="1042" alt="petclinic-screenshot" src="https://cloud.githubusercontent.com/assets/838318/19727082/2aee6d6c-9b8e-11e6-81fe-e889a5ddfded.png">
 
 
-## Demo
-
-A demo app is included to show how to use the project.
-
-To run the demo, follow these steps:
-
-(Add steps to start up the demo)
-
-1.
-2.
-3.
-
-## Resources
-
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
+Congratulations! Now you have your containerized Java Sping Boot App deployed on AKS with supported JDK pushed to your ACR. 
