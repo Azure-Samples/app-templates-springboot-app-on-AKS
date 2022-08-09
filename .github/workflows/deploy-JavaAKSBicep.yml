@@ -15,6 +15,7 @@
 
 name: Build and Deploy Application
 
+
 env:
   # This is the global resource prefix for this deployment
   # Use lower case letters and numbers only
@@ -57,11 +58,10 @@ jobs:
         parameters: ./infra/aks-bicep/parameters.json
         
       # Docker, Build PostgreSQL DB
-     - name: Docker Image
+     - name: Docker PostgresSQL DB Image
        uses: actions/checkout@v2
-     - name: Build PostgresSQL DB Image
-     - run: | 
-          docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0   
+     - name: Build the Docker image
+       run:  docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0   
         
       # Build Java Application
      - name: Build Java Application
@@ -81,6 +81,7 @@ jobs:
           login-server: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
      - run: |
           docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT ${{ secrets.DOCKER_USERNAME }}/dockerhub:myfirstimagepush
           docker push ${{ secrets.DOCKER_USERNAME }}/dockerhub:myfirstimagepush
@@ -95,6 +96,11 @@ jobs:
     
     # Push to ACR
      - name: Docker - AKS CLI
+       uses: Azure/docker-login@v1
+       with:
+          login-server: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
      - run: |
           docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacr.azurecr.io/petclinic
           docker push petclinicaksacr.azurecr.io/petclinic
@@ -115,4 +121,4 @@ jobs:
          kubectl run springpetclinicaks --image=petclinicaksacr.azurecr.io/petclinic:latest
          kubectl expose pod petclinic --type=LoadBalancer --port=80 --target-port=8080
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
-        
+      
