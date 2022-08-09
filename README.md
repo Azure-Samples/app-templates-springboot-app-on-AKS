@@ -8,7 +8,7 @@ Description:
 Tech stack:
 
 - Azure
-- Azure MySql DB
+- Azure PostgreSQL DB
 - Azure Container Registry (ACR)
 - Azure Kubernetes Service (AKS)
 - Azure Infra (Vnet/Subnet)
