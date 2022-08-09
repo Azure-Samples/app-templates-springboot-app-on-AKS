@@ -55,6 +55,12 @@ jobs:
         template: ./infra/aks-bicep/main.bicep
         parameters: ./infra/aks-bicep/parameters.json
         
+      # Docker, Build PostgreSQL DB
+     - name: Docker PostgresSQL DB Image
+     - uses: actions/checkout@v2
+     - name: Build the Docker image
+       run:  docker run --name postgres-petclinic -e POSTGRES_PASSWORD=petclinic -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres:9.6.0 
+       
       # Build Java Application
      - name: Build Java Application
        uses: actions/checkout@v3
