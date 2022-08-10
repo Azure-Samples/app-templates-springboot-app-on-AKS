@@ -2,7 +2,7 @@
 ## Contents
 Description: 
 
-## Deploy Spring Boot apps using Azure Spring Cloud and Azure Services:
+## Deploy Spring Boot apps to AKS:
 
 --
 Tech stack:
