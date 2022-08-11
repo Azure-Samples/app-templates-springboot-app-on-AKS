@@ -50,9 +50,8 @@ jobs:
        with:
         inlineScript: |
           #!/bin/bash
-          az deployment sub create --template-file ./infra/aks-bicep/main.bicep --parameters ./infra/aks-bicep/parameters.json --location eastus
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-  
+          az deployment sub create --template-file ./infra/aks-bicep/main.bicep --parameters ./infra/aks-bicep/parameters.json --location eastus --no-prompt
+   
       # Build Java Application
      - name: Build Java Application
        uses: actions/checkout@v3
