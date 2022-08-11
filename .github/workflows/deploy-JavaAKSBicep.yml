@@ -10,8 +10,7 @@
 #
 # Secrets required to be in place:
 # - AZURE_CREDENTIALS
-# - DOCKER_USERNAME
-# - DOCKER_PASSWORD
+
 
 name: Build and Deploy Application
 env:
