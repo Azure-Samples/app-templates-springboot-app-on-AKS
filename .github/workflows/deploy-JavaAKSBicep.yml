@@ -48,14 +48,14 @@ jobs:
        with:
         inlineScript: |
           #!/bin/bash
-          az group create --name petclinicrg --location eastus        
+          az group create --name petclinicaks-rg --location eastus        
           echo "Azure resource group created"
           
       # Deploy Bicep file
      - name: deploy
        uses: azure/arm-deploy@v1
        with:
-        resourceGroupName: petclinicaksrg
+        resourceGroupName: petclinicaks-rg
         template: ./infra/aks-bicep/main.bicep
         parameters: ./infra/aks-bicep/parameters.json
        
