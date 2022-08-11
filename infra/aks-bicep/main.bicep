@@ -1,7 +1,7 @@
 targetScope='subscription'
 
 // resource group parameters
-param rgName string = 'petclinicaksrg'
+param rgName string = 'petclinicaks-rg'
 param location string = 'eastus'
 
 // vnet parameters
