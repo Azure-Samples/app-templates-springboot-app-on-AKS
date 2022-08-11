@@ -61,7 +61,8 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
       }
     }
     
-      
+   
+    
     enableRBAC: aksSettings.enableRBAC
 
     enablePodSecurityPolicy: false // setting to false since PSPs will be deprecated in favour of Gatekeeper/OPA

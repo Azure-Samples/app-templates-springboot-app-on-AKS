@@ -19,7 +19,7 @@ param bastionName string = 'aks-bastion'
 // jumpbox parameters
 param vmName string = 'aks-vm'
 @secure()
-param adminPassword string = ''
+param adminPassword string 
 
 // aks parameters
 param aksClusterName string = 'aks-cluster'
@@ -172,7 +172,7 @@ module vm 'modules/jump-box.bicep' = {
     location: location
     vmName: vmName
     subnetId: vnet.outputs.mgmtSubnetId
-    adminPassword: adminPassword
+   adminPassword: adminPassword
   }
 }
 
