@@ -1,7 +1,7 @@
 targetScope='subscription'
 
 // resource group parameters
-param rgName string = 'petclinicaks-rg'
+param rgName string = 'petclinicaksrg'
 param location string = 'eastus'
 
 // vnet parameters
@@ -19,8 +19,7 @@ param bastionName string = 'aks-bastion'
 // jumpbox parameters
 param vmName string = 'aks-vm'
 @secure()
-param adminPassword string
-
+param adminPassword string = ''
 
 // aks parameters
 param aksClusterName string = 'aks-cluster'

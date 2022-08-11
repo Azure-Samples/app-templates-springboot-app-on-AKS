@@ -1,5 +1,6 @@
 param vmName string
-param adminPassword string
+@secure()
+param adminPassword string 
 param adminUsername string = 'azureuser'
 param subnetId string
 param location string = 'eastus'

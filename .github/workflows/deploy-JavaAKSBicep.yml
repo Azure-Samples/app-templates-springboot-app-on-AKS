@@ -10,6 +10,7 @@
 #
 # Secrets required to be in place:
 # - AZURE_CREDENTIALS
+# - AZURE_SUBSCRIPTION
 
 name: Build and Deploy Application
 env:
@@ -42,11 +43,20 @@ jobs:
        uses: azure/login@v1
        with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
-               
+            
+     - name: Az CLI Create Resource Group
+       uses: Azure/CLI@v1
+       with:
+        inlineScript: |
+          #!/bin/bash
+          az group create --name petclinicaks-rg --location eastus        
+          echo "Azure resource group created"
+          
       # Deploy Bicep file
      - name: deploy
        uses: azure/arm-deploy@v1
        with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: petclinicaks-rg
         template: ./infra/aks-bicep/main.bicep
         parameters: ./infra/aks-bicep/parameters.json
@@ -95,4 +105,3 @@ jobs:
          kubectl run springpetclinicaks --image=petclinicaksacr.azurecr.io/petclinic:latest
          kubectl expose pod petclinic --type=LoadBalancer --port=80 --target-port=8080
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
-      
