@@ -84,7 +84,6 @@ Create an [Azure Service Principal](https://docs.microsoft.com/en-us/cli/azure/c
    + In the "Security" section of the sidebar, select Secrets. 
    + At the top of the page, click New repository secret
    + Provide the secret name as AZURE_CREDENTIALS
-   + Provide the secret name as AZURE_SUBSCRIPTION
    + Provide the secret name as DOCKER_USERNAME
    + Provide the secret password as DOCKER_PASSWORD
    + Add the output JSON as secret value
