@@ -61,7 +61,6 @@ jobs:
           distribution: 'adopt'
      - name: Build with Maven, compile and build the Docker image
        run: |
-        cd ./App-Templates-Springboot-App-on-AKS
         mvn spring-boot:build-image
 
      # Azure Command Line - ACR Login
