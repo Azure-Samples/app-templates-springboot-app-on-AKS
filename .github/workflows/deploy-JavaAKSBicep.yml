@@ -47,7 +47,6 @@ jobs:
      - name: deploy
        uses: azure/arm-deploy@v1
        with:
-        resourceGroupName: petclinicaks-rg
         template: ./infra/aks-bicep/main.bicep
         parameters: ./infra/aks-bicep/parameters.json
        
