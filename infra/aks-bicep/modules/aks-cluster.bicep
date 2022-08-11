@@ -36,22 +36,6 @@ param defaultNodePool object = {
   orchestratorVersion: null
 }
 
-// https://docs.microsoft.com/en-us/azure/templates/microsoft.operationalinsights/2020-03-01-preview/workspaces?tabs=json
-resource aksAzureMonitor 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
-  name: '${aksClusterName}-logA'
-  tags: {}
-  location: location
-  properties: {
-    sku: {
-      name: 'Standard'
-    }
-    retentionInDays: 30
-    workspaceCapping: {
-      dailyQuotaGb: 30
-    }
-  }
-}
-
 // https://docs.microsoft.com/en-us/azure/templates/microsoft.containerservice/managedclusters?tabs=json#ManagedClusterAgentPoolProfile
 resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
   name: aksClusterName
@@ -77,15 +61,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
       }
     }
     
-    addonProfiles: {
-      omsagent: {
-        enabled: true
-        config: {
-          logAnalyticsWorkspaceResourceID: aksAzureMonitor.id
-        }
-      }
-    }
-    
+      
     enableRBAC: aksSettings.enableRBAC
 
     enablePodSecurityPolicy: false // setting to false since PSPs will be deprecated in favour of Gatekeeper/OPA
