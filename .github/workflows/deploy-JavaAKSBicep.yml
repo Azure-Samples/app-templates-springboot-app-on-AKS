@@ -95,4 +95,3 @@ jobs:
          kubectl run springpetclinicaks --image=petclinicaksacr.azurecr.io/petclinic:latest
          kubectl expose pod petclinic --type=LoadBalancer --port=80 --target-port=8080
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
-      
