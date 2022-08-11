@@ -1,4 +1,4 @@
-targetScope='subscription'
+targetScope='resourceGroup'
 
 // resource group parameters
 param rgName string = 'petclinicaks-rg'
