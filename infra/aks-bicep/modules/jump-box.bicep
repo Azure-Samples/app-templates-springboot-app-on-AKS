@@ -1,5 +1,5 @@
 param vmName string
-param adminPassword string
+param adminPassword string = ''
 param adminUsername string = 'azureuser'
 param subnetId string
 param location string = 'eastus'
