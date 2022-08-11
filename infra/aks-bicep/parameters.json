@@ -5,10 +5,8 @@
 		"k8sVersion": {
 			"value": "1.23.8"
 		},
-		"adminPassword ": {
-			"value": [
-				"AKSadmin937**"
-			]
+		"adminPassword: {
+			"value": "AKSadmin937**"
 		},
 		"adminGroupObjectIDs": {
 			"value": [
