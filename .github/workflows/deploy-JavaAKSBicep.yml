@@ -43,13 +43,6 @@ jobs:
        with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
             
-     - name: Az CLI Create Resource Group
-       uses: Azure/CLI@v1
-       with:
-        azcliversion: 2.30.0
-        inlineScript: |
-          az group create --name petclinicaksrg --location eastus
-      
       # Deploy Bicep file
      - name: deploy
        uses: azure/arm-deploy@v1
