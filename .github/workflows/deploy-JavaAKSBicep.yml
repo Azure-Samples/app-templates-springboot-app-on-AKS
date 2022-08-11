@@ -10,6 +10,7 @@
 #
 # Secrets required to be in place:
 # - AZURE_CREDENTIALS
+# - AZURE_SUBSCRIPTION
 # - DOCKER_USERNAME
 # - DOCKER_PASSWORD
 
@@ -53,7 +54,7 @@ jobs:
        uses: azure/arm-deploy@v1
        with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: ${{ secrets.AZURE_RG }}
+        resourceGroupName: petclinicaks-rg
         template: ./infra/aks-bicep/main.bicep
         parameters: ./infra/aks-bicep/parameters.json
         
