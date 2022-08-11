@@ -46,8 +46,8 @@ jobs:
      - name: Az CLI Create Resource Group
        uses: Azure/CLI@v1
        with:
+        azcliversion: 2.30.0
         inlineScript: |
-          #!/bin/bash
           az group create --name petclinicaks-rg --location eastus
       
       # Deploy Bicep file
