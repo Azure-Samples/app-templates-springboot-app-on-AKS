@@ -63,20 +63,10 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
      - name: Build with Maven, compile and build the Docker image
-       run: mvn spring-boot:build-image
- 
-     # Log into Docker, Push to Docker
-     - name: Docker Login
-       uses: Azure/docker-login@v1
-       with:
-          login-server: docker.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
      - run: |
-          docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT ${{ secrets.DOCKER_USERNAME }}/dockerhub:myfirstimagepush
-          docker push ${{ secrets.DOCKER_USERNAME }}/dockerhub:myfirstimagepush
-          
+        cd ./App-Templates-Springboot-App-on-AKS
+        mvn spring-boot:build-image
+
      # Azure Command Line - ACR Login
      - name: Azure CLI script
        uses: azure/CLI@v1
@@ -85,13 +75,9 @@ jobs:
         inlineScript: |
           az acr login --name petclinicaksacr
     
-    # Push to ACR
+     # Push to ACR
      - name: Docker - AKS CLI
-       uses: Azure/docker-login@v1
-       with:
-          login-server: docker.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+       uses: Azure/docker
      - run: |
           docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacr.azurecr.io/petclinic
           docker push petclinicaksacr.azurecr.io/petclinic
