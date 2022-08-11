@@ -48,13 +48,13 @@ jobs:
        with:
         azcliversion: 2.30.0
         inlineScript: |
-          az group create --name petclinicaks-rg --location eastus
+          az group create --name petclinicaksrg --location eastus
       
       # Deploy Bicep file
      - name: deploy
        uses: azure/arm-deploy@v1
        with:
-        resourceGroupName: petclinicaks-rg
+        resourceGroupName: petclinicaksrg
         template: ./infra/aks-bicep/main.bicep
         parameters: ./infra/aks-bicep/parameters.json
        
