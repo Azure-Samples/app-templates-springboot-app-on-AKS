@@ -10,7 +10,7 @@
 #
 # Secrets required to be in place:
 # - AZURE_CREDENTIALS
-
+# - Test 1
 
 name: Build and Deploy Application
 env:
@@ -50,7 +50,7 @@ jobs:
         inlineScript: |
           #!/bin/bash
           az deployment sub create --template-file ./infra/aks-bicep/main.bicep --parameters ./infra/aks-bicep/parameters.json --location eastus
-  
+   
       # Build Java Application
      - name: Build Java Application
        uses: actions/checkout@v3
