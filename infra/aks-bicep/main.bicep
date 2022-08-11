@@ -19,7 +19,6 @@ param bastionName string = 'aks-bastion'
 // jumpbox parameters
 param vmName string = 'aks-vm'
 
-
 // aks parameters
 param aksClusterName string = 'aks-cluster'
 param k8sVersion string = '1.19.7'

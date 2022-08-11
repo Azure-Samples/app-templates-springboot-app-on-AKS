@@ -1,4 +1,5 @@
 param vmName string
+@secure()
 param adminPassword string = ''
 param adminUsername string = 'azureuser'
 param subnetId string
