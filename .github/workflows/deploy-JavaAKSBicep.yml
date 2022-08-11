@@ -42,11 +42,19 @@ jobs:
        uses: azure/login@v1
        with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
-               
+            
+     - name: Az CLI Create Resource Group
+       uses: Azure/CLI@v1
+       with:
+        inlineScript: |
+          #!/bin/bash
+          az group create --name petclinicaks-rg --location eastus
+      
       # Deploy Bicep file
      - name: deploy
        uses: azure/arm-deploy@v1
        with:
+        resourceGroupName: petclinicaks-rg
         template: ./infra/aks-bicep/main.bicep
         parameters: ./infra/aks-bicep/parameters.json
        
