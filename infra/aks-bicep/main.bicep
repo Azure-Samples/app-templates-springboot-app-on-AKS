@@ -18,8 +18,6 @@ param bastionName string = 'aks-bastion'
 
 // jumpbox parameters
 param vmName string = 'aks-vm'
-@secure()
-param adminPassword string
 
 
 // aks parameters
