@@ -75,7 +75,7 @@ jobs:
     
      # Push to ACR
      - name: Docker - ACR
-       uses: docker/tag-push-action@v2
+       uses: docker/build-push-action@v2
      - run: |
           docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacr.azurecr.io/petclinic
           docker push petclinicaksacr.azurecr.io/petclinic
