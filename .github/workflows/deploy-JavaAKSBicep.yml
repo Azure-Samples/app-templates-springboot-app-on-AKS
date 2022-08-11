@@ -10,6 +10,7 @@
 #
 # Secrets required to be in place:
 # - AZURE_CREDENTIALS
+# - AZURE_SUBSCRIPTION
 
 name: Build and Deploy Application
 env:
@@ -55,7 +56,7 @@ jobs:
      - name: deploy
        uses: azure/arm-deploy@v1
        with:
-        resourceGroupName: petclinicaks-rg
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         template: ./infra/aks-bicep/main.bicep
         parameters: ./infra/aks-bicep/parameters.json
        
