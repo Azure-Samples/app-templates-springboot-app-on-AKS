@@ -131,7 +131,7 @@ var networkRuleCollections = [
   'Premium'
 ])
 param acrSku string = 'Basic'
-param acrName string = 'petclinicaks-acr2022'
+param acrName string = 'petclinicaksacr-acr'
 
 
 // create resource group
