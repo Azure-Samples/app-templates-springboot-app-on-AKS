@@ -44,7 +44,7 @@ jobs:
        with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
             
-     - name: Az CLI -Deploy Bicep Files
+     - name: Azure CLI -Deploy Bicep Files
        uses: Azure/CLI@v1
        with:
         inlineScript: |
@@ -63,7 +63,7 @@ jobs:
        run: |
         mvn spring-boot:build-image
 
-     # Azure Command Line - ACR Login
+     # Azure Powershell Cli - ACR Login
      - name: Azure Poweshell script
        uses: azure/powershell@v1
        with:
@@ -72,14 +72,17 @@ jobs:
          az acr login --name petclinicaksacrazure.azurecr.io
         azPSVersion: "latest"
     
-     # Push to ACR
+     # Azure Powershell Cli - Tag and Push to ACR
      - name: Docker - ACR
-       uses: docker/build-push-action@v2
-     - run: | 
-        docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacrazure.azurecr.io/petclinic
-        docker push petclinicaksacrazure.azurecr.io/petclinic
-          
-     # Azure Command Line - ACR AKS CLI
+       uses: azure/powershell@v1
+       with:
+        inlineScript: |
+         #!/bin/bash
+         docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacrazure.azurecr.io/petclinic
+         docker push petclinicaksacrazure.azurecr.io/petclinic
+        azPSVersion: "latest" 
+       
+     # Azure Powershell Cli - install ACR AKS CLI and Get RG Credentials
      - name: Azure Poweshell script
        uses: azure/powershell@v1
        with:
@@ -89,7 +92,7 @@ jobs:
          az aks get-credentials --resource-group=petclinicaks-rg --name=aks-cluster
         azPSVersion: "latest"
       
-    # Deploy with kubectl
+    # Deploy image to AKS Cluster with kubectl
      - name: Azure Kubectl script
        uses: azure/setup-kubectl@v2.0
      - run: |
