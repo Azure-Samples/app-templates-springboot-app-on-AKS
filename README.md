@@ -1,6 +1,5 @@
 # Spring Boot PetClinic Application Deployed to Azure Kubernetes Service (AKS)
-## Contents
-Description: 
+## Description 
 In this sample apptemplate, PetClinic application a Spring Boot based app is containerized and deployed to a AKS cluster secured by Azure Firewall
 
 ## Deploy Spring Boot apps using Azure Kubernetes Service and Azure Services:
