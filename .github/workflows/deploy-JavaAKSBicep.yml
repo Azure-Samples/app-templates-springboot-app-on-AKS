@@ -10,7 +10,6 @@
 #
 # Secrets required to be in place:
 # - AZURE_CREDENTIALS
-# - Test 4
 
 name: Build and Deploy Application
 env:
@@ -64,7 +63,7 @@ jobs:
         mvn spring-boot:build-image
 
      # Azure Powershell Cli - ACR Login
-     - name: Azure Poweshell script
+     - name: Azure Powershell Cli - ACR Login
        uses: azure/powershell@v1
        with:
         inlineScript: |
@@ -73,7 +72,7 @@ jobs:
         azPSVersion: "latest"
     
      # Azure Powershell Cli - Tag and Push to ACR
-     - name: Docker - ACR
+     - name: Azure Powershell Cli - Tag and Push to ACR
        uses: azure/powershell@v1
        with:
         inlineScript: |
@@ -83,7 +82,7 @@ jobs:
         azPSVersion: "latest" 
        
      # Azure Powershell Cli - install ACR AKS CLI and Get RG Credentials
-     - name: Azure Poweshell script
+     - name: Azure Powershell Cli - install ACR AKS CLI and Get RG Credentials
        uses: azure/powershell@v1
        with:
         inlineScript: |
@@ -92,10 +91,13 @@ jobs:
          az aks get-credentials --resource-group=petclinicaks-rg --name=aks-cluster
         azPSVersion: "latest"
       
-    # Deploy image to AKS Cluster with kubectl
-     - name: Azure Kubectl script
-       uses: azure/setup-kubectl@v2.0
-     - run: |
-        kubectl run springpetclinicaks --image=petclinicaksacrazure.azurecr.io/petclinic:latest
-        kubectl expose pod petclinic --type=LoadBalancer --port=80 --target-port=8080
-        kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
+    # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
+     - name: Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
+       uses: azure/powershell@v1
+       with:
+        inlineScript: | 
+         #!/bin/bash
+         kubectl run springpetclinicaks --image=petclinicaksacrazure.azurecr.io/petclinic:latest
+         kubectl expose pod petclinic --type=LoadBalancer --port=80 --target-port=8080
+         kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
+        azPSVersion: "latest"
