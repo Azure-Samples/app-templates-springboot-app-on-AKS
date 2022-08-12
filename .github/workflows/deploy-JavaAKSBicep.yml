@@ -70,6 +70,7 @@ jobs:
         inlineScript: |
          #!/bin/bash
          az acr login --name petclinicaksacrazure.azurecr.io
+        azPSVersion: "latest"
     
      # Push to ACR
      - name: Docker - ACR
@@ -86,6 +87,7 @@ jobs:
          #!/bin/bash
          az aks install-cli
          az aks get-credentials --resource-group=petclinicaks-rg --name=aks-cluster
+        azPSVersion: "latest"
       
     # Deploy with kubectl
      - name: Azure Kubectl script
