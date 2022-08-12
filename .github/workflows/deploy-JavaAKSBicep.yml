@@ -10,7 +10,7 @@
 #
 # Secrets required to be in place:
 # - AZURE_CREDENTIALS
-# - Test 2
+# - Test 3
 
 name: Build and Deploy Application
 env:
