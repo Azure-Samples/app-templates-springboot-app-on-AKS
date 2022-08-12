@@ -64,12 +64,12 @@ jobs:
         mvn spring-boot:build-image
 
      # Azure Command Line - ACR Login
-     - name: Azure CLI script
-       uses: azure/CLI@v1
+     - name: Azure Poweshell script
+       uses: azure/powershell@v1
        with:
-        azcliversion: 2.30.0
-        run: |
-         az acr login --name petclinicaksacrazure
+        inlineScript: |
+         #!/bin/bash
+         az acr login --name petclinicaksacrazure.azurecr.io
     
      # Push to ACR
      - name: Docker - ACR
@@ -79,11 +79,11 @@ jobs:
         docker push petclinicaksacrazure.azurecr.io/petclinic
           
      # Azure Command Line - ACR AKS CLI
-     - name: Azure CLI script
-       uses: azure/CLI@v1
+     - name: Azure Poweshell script
+       uses: azure/powershell@v1
        with:
-        azcliversion: 2.30.0
-        run: |
+        inlineScript: |
+         #!/bin/bash
          az aks install-cli
          az aks get-credentials --resource-group=petclinicaks-rg --name=aks-cluster
       
