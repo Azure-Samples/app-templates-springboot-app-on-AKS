@@ -69,14 +69,14 @@ jobs:
        with:
         azcliversion: 2.30.0
         inlineScript: |
-          az acr login --name petclinicaks-acr2022
+          az acr login --name petclinicaksacr-acr
     
      # Push to ACR
      - name: Docker - ACR
        uses: docker/build-push-action@v2
      - run: | 
-          docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaks-acr2022.azurecr.io/petclinic
-          docker push petclinicaks-acr2022.azurecr.io/petclinic
+          docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacr-acr.azurecr.io/petclinic
+          docker push petclinicaksacr-acr.azurecr.io/petclinic
           
      # Azure Command Line - ACR AKS CLI
      - name: Azure CLI script
@@ -91,6 +91,6 @@ jobs:
      - name: Azure Kubectl script
        uses: azure/setup-kubectl@v2.0
      - run: |
-         kubectl run springpetclinicaks --image=petclinicaks-acr2022.azurecr.io/petclinic:latest
+         kubectl run springpetclinicaks --image=petclinicaksacr-acr.azurecr.io/petclinic:latest
          kubectl expose pod petclinic --type=LoadBalancer --port=80 --target-port=8080
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
