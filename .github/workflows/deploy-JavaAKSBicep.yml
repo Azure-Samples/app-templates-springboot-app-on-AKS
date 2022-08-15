@@ -97,7 +97,7 @@ jobs:
        with:
         inlineScript: | 
          #!/bin/bash
-         kubectl create deployment petclinicaks --image=petclinicaksacrazure.azurecr.io/petclinic:latest
-         kubectl create service loadbalancer petclinicaks --tcp=80 
+         kubectl run petclinicaks --image=petclinicaksacrazure.azurecr.io/petclinic:latest
+         kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
         azPSVersion: "latest"
