@@ -87,7 +87,7 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         Set-AzAksCluster -Name aks-cluster -ResourceGroupName petclinicaks-rg  -AcrNameToAttach petclinicaksacrazure
+         az aks update -g petclinicaks-rg -n aks-cluster --attach-acr petclinicaksacrazure
         azPSVersion: "latest"
       
     # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
@@ -97,6 +97,6 @@ jobs:
         inlineScript: | 
          #!/bin/bash
          kubectl create deployment petclinicaks --image=petclinicaksacrazure.azurecr.io/petclinic:latest
-         kubectl create service loadbalancer petclinicaks --tcp=80
+         kubectl create service loadbalancer petclinicaks --tcp=80 --target-port=8081
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
         azPSVersion: "latest"
