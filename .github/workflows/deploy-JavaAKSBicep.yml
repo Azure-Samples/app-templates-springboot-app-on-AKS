@@ -68,7 +68,7 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         az acr login --name petclinicaksacrazure.azurecr.io
+         az acr login --name petclinicaksacrazure
         azPSVersion: "latest"
     
      # Azure Powershell Cli - Tag and Push to ACR
@@ -87,7 +87,7 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         az aks update -g petclinicaks-rg -n aks-cluster --attach-acr petclinicaksacrazure.azurecr.io
+         az aks update -g petclinicaks-rg -n aks-cluster --attach-acr petclinicaksacrazure
         azPSVersion: "latest"
       
     # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
@@ -97,6 +97,6 @@ jobs:
         inlineScript: | 
          #!/bin/bash
          kubectl run aks-cluster --image=petclinicaksacrazure.azurecr.io/petclinic:latest
-         kubectl expose pod aks-cluster --type=LoadBalancer --port=80 --target-port=8080
+         kubectl expose pod petclinic --type=LoadBalancer --port=80 --target-port=8081
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
         azPSVersion: "latest"
