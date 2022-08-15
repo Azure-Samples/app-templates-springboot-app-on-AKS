@@ -81,14 +81,13 @@ jobs:
          docker push petclinicaksacrazure.azurecr.io/petclinic
         azPSVersion: "latest" 
        
-     # Azure Powershell Cli - update RG & Cluster Credentials 
-     - name: Azure Powershell Cli - update RG & Cluster Credentials 
+     # Azure Powershell Cli - integrate ACR & Cluster Credentials 
+     - name: Azure Powershell Cli - integrate ACR & Cluster Credentials 
        uses: azure/powershell@v1
        with:
         inlineScript: |
          #!/bin/bash
-         az aks update -g petclinicaks-rg -n aks-cluster --disable-azure-rbac
-         az aks update -g petclinicaks-rg -n aks-cluster --attach-acr petclinicaksacrazure
+         Set-AzAksCluster -Name aks-cluster -ResourceGroupName petclinicaks-rg  -AcrNameToAttach petclinicaksacrazure
         azPSVersion: "latest"
       
     # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
@@ -97,5 +96,7 @@ jobs:
        with:
         inlineScript: | 
          #!/bin/bash
-         kubectl run aks-cluster --image=petclinicaksacrazure.azurecr.io/petclinic:latest
+         kubectl create deployment petclinicaks --image=petclinicaksacrazure.azurecr.io/petclinic:latest
+         kubectl create service loadbalancer petclinicaks --tcp=80
+         kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
         azPSVersion: "latest"
