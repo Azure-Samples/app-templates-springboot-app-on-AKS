@@ -69,7 +69,7 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         az acr login --name petclinicaksacrazure
+         az acr login --name petclinicaksacraz
         azPSVersion: "latest"
     
      # Azure Powershell Cli - Tag and Push to ACR
@@ -78,8 +78,8 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacrazure.azurecr.io/petclinic
-         docker push petclinicaksacrazure.azurecr.io/petclinic
+         docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacraz.azurecr.io/petclinic
+         docker push petclinicaksacraz.azurecr.io/petclinic
         azPSVersion: "latest" 
        
      # Azure Powershell Cli - integrate ACR & Cluster Credentials 
@@ -88,7 +88,7 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         az aks create --resource-group=petclinicaks-rg --name=petclinic-akscluster --attach-acr petclinicaksacrazure --dns-name-prefix=petclinicAKS --generate-ssh-keys
+         az aks create --resource-group=petclinicaks-rg --name=petclinic-akscluster --attach-acr petclinicaksacraz --dns-name-prefix=petclinicAKS --generate-ssh-keys
          az aks install-cli
         azPSVersion: "latest"
       
@@ -99,7 +99,7 @@ jobs:
         inlineScript: | 
          #!/bin/bash
          az aks get-credentials --resource-group petclinicaks-rg --name petclinic-akscluster
-         kubectl run petclinic-akscluster --image=petclinicaksacrazure.azurecr.io/petclinic:latest
+         kubectl run petclinic-akscluster --image=petclinicaksacraz.azurecr.io/petclinic:latest
          kubectl expose pod petclinicAKS --type=LoadBalancer --port=80 --target-port=8080
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
          kubectl get deployments --all-namespaces=true
