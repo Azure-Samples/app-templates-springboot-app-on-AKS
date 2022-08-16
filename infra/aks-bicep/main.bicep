@@ -212,8 +212,8 @@ module aks 'modules/aks-cluster.bicep' = {
       outboundType: 'loadBalancer'
       loadBalancerSku: 'standard'
       sku_tier: aksSkuTier			
-      enableRBAC: false
-      aadProfileManaged: false
+      enableRBAC: true
+      aadProfileManaged: true
       adminGroupObjectIDs: adminGroupObjectIDs 
     }
 
