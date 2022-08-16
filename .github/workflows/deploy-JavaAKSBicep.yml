@@ -92,12 +92,15 @@ jobs:
          az aks update --resource-group=petclinicaks-rg --name=aks-cluster --attach-acr petclinicaksacraz
         azPSVersion: "latest"
       
-    # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
+    # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl kubectl run petclinicjaks --image=petclinicaksacraz.azurecr.io/petclinic:latest
      - name: Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
        uses: azure/powershell@v1
        with:
         inlineScript: | 
-         kubectl run  petclinicjaks --image=petclinicaksacraz.azurecr.io/petclinic:latest
+         kubectl get pods -A 
+         kubectl run -it --rm aks-ssh --image=debian
+         apt-get update -y && apt-get install dnsutils -y && apt-get install curl -y
+         curl -Iv http://<pod-ip-address>:<port>
          kubectl get deployments --all-namespaces=true
-         kubectl describe pods
+         kubectl get pods -A
         azPSVersion: "latest"
