@@ -88,7 +88,7 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         az aks create --resource-group=petclinicAKSRG --name=petclinic-akscluster --attach-acr petclinicaksacrazure --dns-name-prefix=petclinicAKS --generate-ssh-keys
+         az aks create --resource-group=petclinicaks-rg --name=petclinic-akscluster --attach-acr petclinicaksacrazure --dns-name-prefix=petclinicAKS --generate-ssh-keys
          az aks install-cli
         azPSVersion: "latest"
       
@@ -98,10 +98,9 @@ jobs:
        with:
         inlineScript: | 
          #!/bin/bash
-         az aks get-credentials --resource-group petclinicAKSRG --name petclinic-akscluster
+         az aks get-credentials --resource-group petclinicaks-rg --name petclinic-akscluster
          kubectl run petclinic-akscluster --image=petclinicaksacrazure.azurecr.io/petclinic:latest
          kubectl expose pod petclinicAKS --type=LoadBalancer --port=80 --target-port=8080
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
-         # List all deployments in all namespaces
          kubectl get deployments --all-namespaces=true
         azPSVersion: "latest"
