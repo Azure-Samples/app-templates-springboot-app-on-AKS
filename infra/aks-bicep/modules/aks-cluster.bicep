@@ -63,7 +63,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
     
    
     
-    enableRBAC: aksSettings.enableRBAC
+  //  enableRBAC: aksSettings.enableRBAC
 
     enablePodSecurityPolicy: false // setting to false since PSPs will be deprecated in favour of Gatekeeper/OPA
 
@@ -77,16 +77,16 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
       loadBalancerSku: aksSettings.loadBalancerSku 
     }
 
-    aadProfile: {
-      managed: aksSettings.aadProfileManaged
-      // enableAzureRBAC: true // Cross-Tenant Azure RBAC doesn't work - must be same tenant as the cluster subscription
-      adminGroupObjectIDs: aksSettings.adminGroupObjectIDs
-    }
+ //   aadProfile: {
+//      managed: aksSettings.aadProfileManaged
+//      // enableAzureRBAC: true // Cross-Tenant Azure RBAC doesn't work - must be same tenant as the cluster subscription
+//      adminGroupObjectIDs: aksSettings.adminGroupObjectIDs
+//    }
 
     autoUpgradeProfile: {}
 
     apiServerAccessProfile: {
-      enablePrivateCluster: true
+      enablePrivateCluster: false
       privateDNSZone: 'none'
       enablePrivateClusterPublicFQDN: true
       
