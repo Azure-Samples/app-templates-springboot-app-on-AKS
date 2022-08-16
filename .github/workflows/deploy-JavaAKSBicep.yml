@@ -88,7 +88,6 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         az account set --subscription ${{ secrets.AZURE_SUBCRIPTION }}
          az aks get-credentials --resource-group petclinicaks-rg --name aks-cluster
          az aks update -n aks-cluster -g petclinicaks-rg --attach-acr petclinicaksacrazure
         azPSVersion: "latest"
@@ -99,7 +98,6 @@ jobs:
        with:
         inlineScript: | 
          #!/bin/bash
-         az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
          az aks get-credentials --resource-group petclinicaks-rg --name aks-cluster
          kubectl run petclinicaks --image=petclinicaksacrazure.azurecr.io/petclinic:latest
          kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
