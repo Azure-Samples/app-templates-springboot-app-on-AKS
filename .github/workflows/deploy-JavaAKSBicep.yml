@@ -97,9 +97,7 @@ jobs:
        uses: azure/powershell@v1
        with:
         inlineScript: | 
-         #!/bin/bash
-         az aks get-credentials --resource-group petclinicaks-rg --name aks-cluster
-         kubectl run aks-cluster --image=petclinicaksacraz.azurecr.io/petclinic:latest
+         kubectl run  petclinicjaks --image=petclinicaksacraz.azurecr.io/petclinic:latest
          kubectl get deployments --all-namespaces=true
          kubectl describe pods
         azPSVersion: "latest"
