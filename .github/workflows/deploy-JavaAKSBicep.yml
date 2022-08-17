@@ -98,8 +98,9 @@ jobs:
         inlineScript: | 
          kubectl run petclinicaks --image=petclinicaksacraz.azurecr.io/petclinic
          kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
+         kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
+         kubectl get pods -A
          kubectl get service petclinicaks
          kubectl describe service petclinicaks
-         kubectl get pods -A
-          kubectl describe service petclinicaks
+         kubectl get --namespace petclinicaks svc/esp-echo --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}"
         azPSVersion: "latest"
