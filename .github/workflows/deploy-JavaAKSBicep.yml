@@ -99,6 +99,8 @@ jobs:
          kubectl get pods -A 
          kubectl run petclinicaks --image=petclinicaksacraz.azurecr.io/petclinic
          kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
-         kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
+         kubectl get service petclinicaks -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
+         kubectl get service petclinicaks
+         kubectl describe service petclinicaks
          kubectl get pods -A
         azPSVersion: "latest"
