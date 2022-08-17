@@ -202,6 +202,7 @@ module aks 'modules/aks-cluster.bicep' = {
 
     aksSettings: {
       clusterName: aksClusterName
+      identity: 'SystemAssigned'
       kubernetesVersion: k8sVersion
       networkPlugin: 'azure'
       networkPolicy: aksNetworkPolicy

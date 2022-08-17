@@ -39,6 +39,9 @@ param defaultNodePool object = {
 resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
   name: aksClusterName
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
   sku: {
     name: 'Basic'
     tier: aksSettings.sku_tier
