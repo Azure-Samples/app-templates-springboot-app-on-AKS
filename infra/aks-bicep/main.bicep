@@ -131,7 +131,7 @@ var networkRuleCollections = [
   'Premium'
 ])
 param acrSku string = 'Basic'
-param acrName string = 'petclinicaksacrazure'
+param acrName string = 'petclinicaksacraz'
 
 
 // create resource group
@@ -212,8 +212,8 @@ module aks 'modules/aks-cluster.bicep' = {
       outboundType: 'loadBalancer'
       loadBalancerSku: 'standard'
       sku_tier: aksSkuTier			
-      enableRBAC: true 
-      aadProfileManaged: true
+      enableRBAC: false
+      aadProfileManaged: false
       adminGroupObjectIDs: adminGroupObjectIDs 
     }
 

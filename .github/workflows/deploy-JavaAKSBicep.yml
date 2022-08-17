@@ -68,7 +68,7 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         az acr login --name petclinicaksacrazure
+         az acr login --name petclinicaksacraz
         azPSVersion: "latest"
     
      # Azure Powershell Cli - Tag and Push to ACR
@@ -77,26 +77,28 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacrazure.azurecr.io/petclinic
-         docker push petclinicaksacrazure.azurecr.io/petclinic
+         docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacraz.azurecr.io/petclinic
+         docker push petclinicaksacraz.azurecr.io/petclinic
         azPSVersion: "latest" 
        
-     # Azure Powershell Cli - integrate ACR & Cluster Credentials 
-     - name: Azure Powershell Cli - integrate ACR & Cluster Credentials 
+     # Azure Powershell Cli - Update AKS Cluster and Integrate ACR
+     - name: Azure Powershell Cli - Update AKS Cluster and Integrate ACR
        uses: azure/powershell@v1
        with:
         inlineScript: |
          #!/bin/bash
-         az aks update -n aks-cluster -g petclinicaks-rg --attach-acr petclinicaksacrazure
+         az aks get-credentials --resource-group petclinicaks-rg --name aks-cluster
+         az aks update --resource-group=petclinicaks-rg --name=aks-cluster --attach-acr petclinicaksacraz
         azPSVersion: "latest"
       
-    # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
+    # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl kubectl run petclinicjaks --image=petclinicaksacraz.azurecr.io/petclinic:latest
      - name: Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
        uses: azure/powershell@v1
        with:
         inlineScript: | 
-         #!/bin/bash
-         kubectl run petclinicaks --image=petclinicaksacrazure.azurecr.io/petclinic:latest
+         kubectl get pods -A 
+         kubectl run petclinicaks --image=petclinicaksacraz.azurecr.io/petclinic
          kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
+         kubectl get pods -A
         azPSVersion: "latest"
