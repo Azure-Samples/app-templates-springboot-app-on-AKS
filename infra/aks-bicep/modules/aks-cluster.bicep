@@ -6,7 +6,6 @@ param location string = 'eastus'
 
 param aksSettings object = {
   kubernetesVersion: null
-  identity: 'SystemAssigned'
   networkPlugin: 'azure'
   networkPolicy: 'calico'
   serviceCidr: '172.16.0.0/22' // Must be cidr not in use any where else across the Network (Azure or Peered/On-Prem).  Can safely be used in multiple clusters - presuming this range is not broadcast/advertised in route tables.
@@ -15,8 +14,8 @@ param aksSettings object = {
   outboundType: 'UDR'
   loadBalancerSku: 'standard'
   sku_tier: 'Paid'				
-  enableRBAC: true
-  aadProfileManaged: true
+  enableRBAC: false
+  aadProfileManaged: false
   adminGroupObjectIDs: [] 
 }
 
@@ -40,9 +39,6 @@ param defaultNodePool object = {
 resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
   name: aksClusterName
   location: location
-  identity: {
-    type: aksSettings.identity
-  }
   sku: {
     name: 'Basic'
     tier: aksSettings.sku_tier
@@ -60,10 +56,8 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
         ]
       }
     }
-    
-   
-    
-    enableRBAC: aksSettings.enableRBAC
+  
+
 
     enablePodSecurityPolicy: false // setting to false since PSPs will be deprecated in favour of Gatekeeper/OPA
 
@@ -77,18 +71,12 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
       loadBalancerSku: aksSettings.loadBalancerSku 
     }
 
-    aadProfile: {
-      managed: aksSettings.aadProfileManaged
-      // enableAzureRBAC: true // Cross-Tenant Azure RBAC doesn't work - must be same tenant as the cluster subscription
-      adminGroupObjectIDs: aksSettings.adminGroupObjectIDs
-    }
-
     autoUpgradeProfile: {}
 
     apiServerAccessProfile: {
-      enablePrivateCluster: true
+      enablePrivateCluster: false
       privateDNSZone: 'none'
-      enablePrivateClusterPublicFQDN: true
+      enablePrivateClusterPublicFQDN: false
       
     }
     
@@ -99,4 +87,3 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
 }
 
 
-output identity string = aks.identity.principalId

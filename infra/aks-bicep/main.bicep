@@ -202,7 +202,6 @@ module aks 'modules/aks-cluster.bicep' = {
 
     aksSettings: {
       clusterName: aksClusterName
-      identity: 'SystemAssigned'
       kubernetesVersion: k8sVersion
       networkPlugin: 'azure'
       networkPolicy: aksNetworkPolicy
@@ -212,8 +211,8 @@ module aks 'modules/aks-cluster.bicep' = {
       outboundType: 'loadBalancer'
       loadBalancerSku: 'standard'
       sku_tier: aksSkuTier			
-      enableRBAC: true 
-      aadProfileManaged: true
+      enableRBAC: false
+      aadProfileManaged: false
       adminGroupObjectIDs: adminGroupObjectIDs 
     }
 
