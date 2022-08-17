@@ -98,9 +98,9 @@ jobs:
        with:
         inlineScript: | 
          kubectl get pods -A 
-         kubectl run -it --rm aks-ssh --image=debian
-         apt-get update -y && apt-get install dnsutils -y && apt-get install curl -y
-         curl -Iv http://<pod-ip-address>:<port>
+         kubectl run -it --rm petclinicaks --image=petclinicaksacrazure.azurecr.io/petclinic:latest
+         kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
+         kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
          kubectl get deployments --all-namespaces=true
          kubectl get pods -A
         azPSVersion: "latest"
