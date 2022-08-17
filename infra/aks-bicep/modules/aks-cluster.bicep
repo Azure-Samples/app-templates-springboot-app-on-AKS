@@ -57,10 +57,6 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
       }
     }
   
-
-
-    enablePodSecurityPolicy: false // setting to false since PSPs will be deprecated in favour of Gatekeeper/OPA
-
     networkProfile: {
       networkPlugin: aksSettings.networkPlugin 
       networkPolicy: aksSettings.networkPolicy 
@@ -73,17 +69,10 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
 
     autoUpgradeProfile: {}
 
-    apiServerAccessProfile: {
-      enablePrivateCluster: false
-      privateDNSZone: 'none'
-      enablePrivateClusterPublicFQDN: false
-      
-    }
-    
-    agentPoolProfiles: [
+     agentPoolProfiles: [
       defaultNodePool
     ]
   }
 }
 
-
+output identity string = aks.identity.principalId
