@@ -95,7 +95,5 @@ jobs:
        uses: azure/powershell@v1
        with:
         inlineScript: | 
-         kubectl describe service petclinicaks
-         kubectl get pods -A
          kubectl get service petclinicaks
         azPSVersion: "latest"
