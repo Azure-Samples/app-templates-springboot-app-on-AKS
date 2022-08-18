@@ -98,7 +98,7 @@ jobs:
         inlineScript: | 
          kubectl run petclinicaks --image=petclinicaksacraz.azurecr.io/petclinic
          kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
-         kubectl wait -n petcliniaks --for=condition=available --timeout=120s --all deployments
+         kubectl wait --for=condition=available --timeout=300s --all deployments
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
          kubectl get pods -A
          kubectl get service petclinicaks
