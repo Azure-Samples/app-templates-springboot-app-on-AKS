@@ -98,7 +98,14 @@ jobs:
         inlineScript: | 
          kubectl run petclinicaks --image=petclinicaksacraz.azurecr.io/petclinic
          kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
-         kubectl -n petclinicaks wait --for=condition=available --timeout=120s --all deployments
+        azPSVersion: "latest"
+
+  # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl kubectl run petclinicjaks --image=petclinicaksacraz.azurecr.io/petclinic:latest
+     - name: Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
+       uses: azure/powershell@v1
+       with:
+        inlineScript: | 
+         kubectl wait --for=condition=available --timeout=120s --all deployments
          kubectl get service petclinicaks -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
          kubectl get pods -A
          kubectl get service petclinicaks
