@@ -14,8 +14,8 @@ param aksSettings object = {
   outboundType: 'UDR'
   loadBalancerSku: 'standard'
   sku_tier: 'Paid'				
-  enableRBAC: false
-  aadProfileManaged: false
+  enableRBAC: true
+  aadProfileManaged: true
   adminGroupObjectIDs: [] 
 }
 

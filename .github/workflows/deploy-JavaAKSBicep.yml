@@ -50,7 +50,7 @@ jobs:
           #!/bin/bash
           az deployment sub create --template-file ./infra/aks-bicep/main.bicep --parameters ./infra/aks-bicep/parameters.json --location eastus
    
-      # Build Java Application
+     # Build Java Application
      - name: Build Java Application
        uses: actions/checkout@v3
      - name: Set up JDK 11
@@ -62,43 +62,40 @@ jobs:
        run: |
         mvn spring-boot:build-image
 
-     # Azure Powershell Cli - ACR Login
-     - name: Azure Powershell Cli - ACR Login
+     # Azure Powershell Cli - ACR Login, Tag Image, Push Image, Update ACR, Attach ACR to Cluster, Create Pod
+     - name: Azure Powershell Cli - ACR Login, Tag Image, Push Image, Update ACR, Attach ACR to Cluster, Create Pod
        uses: azure/powershell@v1
        with:
         inlineScript: |
          #!/bin/bash
          az acr login --name petclinicaksacraz
-        azPSVersion: "latest"
-    
-     # Azure Powershell Cli - Tag and Push to ACR
-     - name: Azure Powershell Cli - Tag and Push to ACR
-       uses: azure/powershell@v1 
-       with:
-        inlineScript: |
-         #!/bin/bash
          docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacraz.azurecr.io/petclinic
          docker push petclinicaksacraz.azurecr.io/petclinic
-        azPSVersion: "latest" 
-       
-     # Azure Powershell Cli - Update AKS Cluster and Integrate ACR
-     - name: Azure Powershell Cli - Update AKS Cluster and Integrate ACR
-       uses: azure/powershell@v1
-       with:
-        inlineScript: |
-         #!/bin/bash
          az aks get-credentials --resource-group petclinicaks-rg --name aks-cluster
          az aks update --resource-group=petclinicaks-rg --name=aks-cluster --attach-acr petclinicaksacraz
+         kubectl run petclinicaks --image=petclinicaksacraz.azurecr.io/petclinic
+         kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
+         kubectl get pods -A
         azPSVersion: "latest"
-      
-    # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl kubectl run petclinicjaks --image=petclinicaksacraz.azurecr.io/petclinic:latest
-     - name: Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
+
+     # Re-Build Java Application
+     - name: Re-Build Java Application
+       uses: actions/checkout@v3
+     - name: Re-Set up JDK 11
+       uses: actions/setup-java@v3
+       with:
+          java-version: '11'
+          distribution: 'adopt'
+     - name: Build with Maven, compile and build the Docker image
+       run: |
+        mvn spring-boot:build-image
+    
+     # Azure Powershell Cli - Get deployment IP Address 
+     - name: Azure Powershell Cli - Get deployment IP Address 
        uses: azure/powershell@v1
        with:
         inlineScript: | 
-         kubectl get pods -A 
-         kubectl run petclinicaks --image=petclinicaksacraz.azurecr.io/petclinic
-         kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
-         kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
+         kubectl describe service petclinicaks
          kubectl get pods -A
+         kubectl get service petclinicaks
         azPSVersion: "latest"

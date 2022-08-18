@@ -13,9 +13,6 @@ param bastionSubnetPrefix string = '10.50.3.0/24'
 param fwSubnetPrefix string = '10.50.4.0/24'
 param mgmtSubnetPrefix string = '10.50.5.0/24'
 
-// bastion parameters
-param bastionName string = 'aks-bastion'
-
 // jumpbox parameters
 param vmName string = 'aks-vm'
 @secure()
@@ -155,16 +152,6 @@ module vnet 'modules/aks-vnet.bicep' = {
   }
 }
 
-module bastion 'modules/bastion.bicep' = {
-  name: bastionName
-  scope: rg
-  params: {
-    location: location
-    bastionName: bastionName
-    subnetId: vnet.outputs.bastionSubnetId
-  }
-}
-
 module vm 'modules/jump-box.bicep' = {
   name: vmName
   scope: rg
@@ -212,8 +199,8 @@ module aks 'modules/aks-cluster.bicep' = {
       outboundType: 'loadBalancer'
       loadBalancerSku: 'standard'
       sku_tier: aksSkuTier			
-      enableRBAC: false
-      aadProfileManaged: false
+      enableRBAC: true
+      aadProfileManaged: true
       adminGroupObjectIDs: adminGroupObjectIDs 
     }
 
