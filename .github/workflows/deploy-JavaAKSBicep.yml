@@ -62,40 +62,17 @@ jobs:
        run: |
         mvn spring-boot:build-image
 
-     # Azure Powershell Cli - ACR Login
-     - name: Azure Powershell Cli - ACR Login
+     # Azure Powershell Cli - ACR Login, Tag Image, Push Image, Update ACR, Attach ACR to Cluster, Create Pod
+     - name: Azure Powershell Cli - ACR Login, Tag Image, Push Image, Update ACR, Attach ACR to Cluster, Create Pod
        uses: azure/powershell@v1
        with:
         inlineScript: |
          #!/bin/bash
          az acr login --name petclinicaksacraz
-        azPSVersion: "latest"
-    
-     # Azure Powershell Cli - Tag and Push to ACR
-     - name: Azure Powershell Cli - Tag and Push to ACR
-       uses: azure/powershell@v1 
-       with:
-        inlineScript: |
-         #!/bin/bash
          docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacraz.azurecr.io/petclinic
          docker push petclinicaksacraz.azurecr.io/petclinic
-        azPSVersion: "latest" 
-       
-     # Azure Powershell Cli - Update AKS Cluster and Integrate ACR
-     - name: Azure Powershell Cli - Update AKS Cluster and Integrate ACR
-       uses: azure/powershell@v1
-       with:
-        inlineScript: |
-         #!/bin/bash
          az aks get-credentials --resource-group petclinicaks-rg --name aks-cluster
          az aks update --resource-group=petclinicaks-rg --name=aks-cluster --attach-acr petclinicaksacraz
-        azPSVersion: "latest"
-      
-     # Azure Powershell Cli - Create Petclinic Service and Expose the Service 
-     - name: Azure Powershell Cli - Create Petclinic Service and Expose the Service
-       uses: azure/powershell@v1
-       with:
-        inlineScript: | 
          kubectl run petclinicaks --image=petclinicaksacraz.azurecr.io/petclinic
          kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
          kubectl get pods -A
