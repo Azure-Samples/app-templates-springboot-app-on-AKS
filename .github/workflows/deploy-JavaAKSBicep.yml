@@ -87,12 +87,12 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         az aks create --resource-group=petclinicaks-rg --name=aks-cluster --attach-acr petclinicaksacraz --dns-name-prefix=petclinicaks --generate-ssh-keys
-         az aks get-credentials --resource-group=petclinicaks-rg --name=aks-cluster
+         az aks get-credentials --resource-group petclinicaks-rg --name aks-cluster
+         az aks update --resource-group=petclinicaks-rg --name=aks-cluster --attach-acr petclinicaksacraz
         azPSVersion: "latest"
       
-     # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl kubectl run petclinicjaks --image=petclinicaksacraz.azurecr.io/petclinic:latest
-     - name: Azure Powershell Cli - Deploy image to AKS Cluster with kubectl
+     # Azure Powershell Cli - Create Petclinic Service and Expose the Service 
+     - name: Azure Powershell Cli - Create Petclinic Service and Expose the Service
        uses: azure/powershell@v1
        with:
         inlineScript: | 
@@ -119,6 +119,6 @@ jobs:
        with:
         inlineScript: | 
          kubectl describe service petclinicaks
+         kubectl get pods -A
          kubectl get service petclinicaks
-         kubectl get service petclinicaks -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
         azPSVersion: "latest"
