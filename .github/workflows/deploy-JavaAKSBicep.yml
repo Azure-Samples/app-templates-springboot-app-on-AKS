@@ -100,19 +100,16 @@ jobs:
          kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
         azPSVersion: "latest"
 
-     # Application Rebuild 
-     - name: Application Rebuild
-       uses: actions/checkout@v3
-     - name: Set up JDK 11
-       uses: actions/setup-java@v3
+    # Azure Powershell Cli - ACR Login
+     - name: Azure Powershell Cli - ACR Login
+       uses: azure/powershell@v1
        with:
-          java-version: '11'
-          distribution: 'adopt'
-     - name: Build with Maven, compile and build the Docker image
-       run: |
-        mvn spring-boot:build-image
-
-
+        inlineScript: |
+         #!/bin/bash
+         az acr login --name petclinicaksacraz
+         az aks get-credentials --resource-group=petclinicaks-rg --name=aks-cluster
+        azPSVersion: "latest"
+    
      # Azure Powershell Cli - Get deployment IP Address 
      - name: Azure Powershell Cli - Get deployment IP Address 
        uses: azure/powershell@v1
