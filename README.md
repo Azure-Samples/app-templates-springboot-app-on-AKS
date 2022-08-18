@@ -116,3 +116,11 @@ To view the deployed PetClinic app, follow the steps listed below:
 3.  Open the Section....you will see a table, that list the EXTERNAL-IP.
 4.  The EXTERNAL-IP will relfect the location of the deployment.  
 5.  You can utilze the EXTERNAL-IP to view the deployed image. 
+
+## Clean up resources
+When you are done, you can delete all the Azure resources created with this template by running the following command:
+
+```
+resourceGroup=petclinicaks-rg
+az group delete --name $resourceGroup
+```
