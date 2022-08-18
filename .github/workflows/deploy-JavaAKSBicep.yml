@@ -87,9 +87,9 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         az aks create --resource-group=petclinicaks-rg --name=petclinic-akscluster --attach-acr petclinicaksacraz --dns-name-prefix=petclinicAKS --generate-ssh-keys
+         az aks create --resource-group=petclinicaks-rg --name=aks-cluster --attach-acr petclinicaksacraz --dns-name-prefix=petclinicaks --generate-ssh-keys
          az aks install-cli 
-         az aks get-credentials --resource-group=petclinicAKSRG --name=petclinic-akscluster
+         az aks get-credentials --resource-group=petclinicaks-rg --name=aks-cluster
         azPSVersion: "latest"
       
     # Azure Powershell Cli - Deploy image to AKS Cluster with kubectl kubectl run petclinicjaks --image=petclinicaksacraz.azurecr.io/petclinic:latest
