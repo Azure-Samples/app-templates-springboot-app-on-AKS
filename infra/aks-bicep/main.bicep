@@ -21,25 +21,6 @@ param vmName string = 'aks-vm'
 @secure()
 param adminPassword string 
 
-// aks parameters
-param aksClusterName string = 'aks-cluster'
-param k8sVersion string = '1.19.7'
-param adminPublicKey string
-param adminGroupObjectIDs array = []
-@allowed([
-  'Free'
-  'Paid'
-])
-param aksSkuTier string = 'Free'
-param aksVmSize string = 'Standard_D2s_v3'
-param aksNodes int = 1
-
-@allowed([
-  'azure'
-  'calico'
-])
-param aksNetworkPolicy string = 'calico'
-
 // fw parameters
 param fwName string = 'aks-fw'
 var applicationRuleCollections = [
@@ -188,48 +169,6 @@ module fw 'modules/azfw.bicep' = {
   }
 }
 
-module aks 'modules/aks-cluster.bicep' = {
-  name: aksClusterName
-  dependsOn: [
-    fw
-  ]
-  scope: rg
-  params: {    
-    location: location
-    aksClusterName: aksClusterName
-    subnetId: vnet.outputs.aksSubnetId
-    adminPublicKey: adminPublicKey
-
-    aksSettings: {
-      clusterName: aksClusterName
-      identity: 'SystemAssigned'
-      kubernetesVersion: k8sVersion
-      networkPlugin: 'azure'
-      networkPolicy: aksNetworkPolicy
-      serviceCidr: '172.16.0.0/22' // can be reused in multiple clusters; no overlap with other IP ranges
-      dnsServiceIP: '172.16.0.10'
-      dockerBridgeCidr: '172.16.4.1/22'
-      outboundType: 'loadBalancer'
-      loadBalancerSku: 'standard'
-      sku_tier: aksSkuTier			
-      enableRBAC: false
-      aadProfileManaged: false
-      adminGroupObjectIDs: adminGroupObjectIDs 
-    }
-
-    defaultNodePool: {
-      name: 'pool01'
-      count: aksNodes
-      vmSize: aksVmSize
-      osDiskSizeGB: 50
-      osDiskType: 'Ephemeral'
-      vnetSubnetID: vnet.outputs.aksSubnetId
-      osType: 'Linux'
-      type: 'VirtualMachineScaleSets'
-      mode: 'System'
-    }    
-  }
-}
 
 module acr 'modules/acr.bicep' = {
   name: acrName
