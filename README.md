@@ -109,10 +109,10 @@ Congratulations! Now you have your containerized Java Sping Boot App deployed on
 
 # Pet Clinic Website - IP Address 
 
-If you wish to view the PetClinic Deployment, follow the steps listed below:
+To view the deployed PetClinic app, follow the steps listed below:
 
-1.  Got to GitHub Actions and clink on your latest Deployment
+1.  Go to GitHub Actions and click on your latest Deployment
 2.  Scroll down to the section titled "Azure Powershell Cli - Get deployment IP Address"
 3.  Open the Section....you will see a table, that list the EXTERNAL-IP.
-4.  The EXTERNAL-IP will relfect the location of the Deployment.  
+4.  The EXTERNAL-IP will relfect the location of the deployment.  
 5.  You can utilze the EXTERNAL-IP to view the deployed image. 
