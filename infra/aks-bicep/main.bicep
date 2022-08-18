@@ -13,9 +13,6 @@ param bastionSubnetPrefix string = '10.50.3.0/24'
 param fwSubnetPrefix string = '10.50.4.0/24'
 param mgmtSubnetPrefix string = '10.50.5.0/24'
 
-// bastion parameters
-param bastionName string = 'aks-bastion'
-
 // jumpbox parameters
 param vmName string = 'aks-vm'
 @secure()
@@ -152,16 +149,6 @@ module vnet 'modules/aks-vnet.bicep' = {
     bastionSubnetPrefix: bastionSubnetPrefix
     fwSubnetPrefix: fwSubnetPrefix
     mgmtSubnetPrefix: mgmtSubnetPrefix
-  }
-}
-
-module bastion 'modules/bastion.bicep' = {
-  name: bastionName
-  scope: rg
-  params: {
-    location: location
-    bastionName: bastionName
-    subnetId: vnet.outputs.bastionSubnetId
   }
 }
 
