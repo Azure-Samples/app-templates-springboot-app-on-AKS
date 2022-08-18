@@ -113,10 +113,6 @@ If you wishe to view the PetClinic Deployment, follow the steps listed below:
 
 1.  Got to GitHub Actions and clink on your latest Deployment
 2.  Scroll down to the section titled "Azure Powershell Cli - Get deployment IP Address"
-3.  Open the Section....you will see a table, that list the following
-
-    NAME           TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)        AGE
-petclinicaks   LoadBalancer      10.0.116.107    XX.XX.XX.XX    80:32202/TCP     1s
-
-4.  The EXTERNAL-IP will be updated to relfect the location of the Deployment.  
+3.  Open the Section....you will see a table, that list the EXTERNAL-IP.
+4.  The EXTERNAL-IP will relfect the location of the Deployment.  
 5.  You can utilze the EXTERNAL-IP to view the deployed image. 
