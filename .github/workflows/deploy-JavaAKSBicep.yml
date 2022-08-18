@@ -48,7 +48,7 @@ jobs:
        with:
         inlineScript: |
           #!/bin/bash
-          az deployment sub create --template-file ./infra/aks-bicep/main.bicep --parameters ./infra/aks-bicep/parameters.json --location eastus
+          az deployment sub create --template-file ./infra/aks-bicep/main.bicep --location eastus
    
       # Build Java Application
      - name: Build Java Application
