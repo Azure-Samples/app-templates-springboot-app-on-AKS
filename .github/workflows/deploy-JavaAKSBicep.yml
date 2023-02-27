@@ -84,14 +84,14 @@ jobs:
        with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ env.CLUSTER_NAME }}
-        resource-group: petclinicaks-rg
+        resource-group: petclinicaks-amrg
      - name: Azure Powershell Cli - Update ACR, Attach ACR to Cluster, Create Service and Expose the Pod
        uses: azure/powershell@v1
        with:
         inlineScript: |
          #!/bin/bash
-         az aks get-credentials --resource-group petclinicaks-rg --name ${{ env.CLUSTER_NAME }}
-         az aks update --resource-group=petclinicaks-rg --name=${{ env.CLUSTER_NAME }} --attach-acr ${{ env.ACR_NAME }}
+         az aks get-credentials --resource-group petclinicaks-amrg --name ${{ env.CLUSTER_NAME }}
+         az aks update --resource-group=petclinicaks-amrg --name=${{ env.CLUSTER_NAME }} --attach-acr ${{ env.ACR_NAME }}
          kubectl run petclinicaks --image=petclinicaksacr.azurecr.io/petclinic:latest
          kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
          kubectl get pods -A
