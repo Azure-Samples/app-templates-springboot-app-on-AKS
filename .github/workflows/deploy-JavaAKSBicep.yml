@@ -46,7 +46,7 @@ jobs:
         inlineScript: |
           #!/bin/bash
           az deployment sub create --template-file ./infra/aks-bicep/main.bicep --parameters ./infra/aks-bicep/parameters.json --location eastus
-          az postgres server create --resource-group petclinicaks-rg --name petclinicaks-db  --location eastus --admin-user petclinicaksadmin --admin-password petclinicAKS123** --sku-name GP_Gen5_2
+          az postgres server create --resource-group petclinicaks-amrg --name petclinicaks-db  --location eastus --admin-user petclinicaksadmin --admin-password petclinicAKS123** --sku-name GP_Gen5_2
 
   build_Java_App: # Build the Java Application 
      runs-on: ubuntu-latest
