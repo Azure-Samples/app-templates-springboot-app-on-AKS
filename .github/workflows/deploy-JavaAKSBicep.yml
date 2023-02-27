@@ -15,10 +15,8 @@ name: Build and Deploy Application
 env:
   DEPLOYMENT_NAME: "petclinicaks"
   DEPLOYMENT_REGION: "eastus"
-  LOCATION: "eastus"
-  ACR_NAME: "petclinicaksacr23"
+  ACR_NAME: "petclinicaksacr"
   CLUSTER_NAME: "aks-cluster"
-  RESOURCE_GROUP: "petclinicaks-rg"
 
 on:
   # Triggers the workflow on push events on the main branch
@@ -48,7 +46,7 @@ jobs:
         inlineScript: |
           #!/bin/bash
           az deployment sub create --template-file ./infra/aks-bicep/main.bicep --parameters ./infra/aks-bicep/parameters.json --location eastus
-          az postgres server create --resource-group petclinicaks-rg --name petclinicaks-db23  --location eastus --admin-user petclinicaksadmin --admin-password petclinicAKS123** --sku-name GP_Gen5_2
+          az postgres server create --resource-group petclinicaks-rg --name petclinicaks-db  --location eastus --admin-user petclinicaksadmin --admin-password petclinicAKS123** --sku-name GP_Gen5_2
 
   build_Java_App: # Build the Java Application 
      runs-on: ubuntu-latest
@@ -77,9 +75,9 @@ jobs:
        with:
         inlineScript: |
          #!/bin/bash
-         az acr login --name petclinicaksacr23
-         docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacr23.azurecr.io/petclinic
-         docker push petclinicaksacr23.azurecr.io/petclinic
+         az acr login --name petclinicaksacr
+         docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacr.azurecr.io/petclinic
+         docker push petclinicaksacr.azurecr.io/petclinic
         azPSVersion: "latest"
      - name: Set the target AKS cluster.
        uses: Azure/aks-set-context@v1
@@ -94,7 +92,7 @@ jobs:
          #!/bin/bash
          az aks get-credentials --resource-group petclinicaks-rg --name ${{ env.CLUSTER_NAME }}
          az aks update --resource-group=petclinicaks-rg --name=${{ env.CLUSTER_NAME }} --attach-acr ${{ env.ACR_NAME }}
-         kubectl run petclinicaks --image=petclinicaksacr23.azurecr.io/petclinic:latest
+         kubectl run petclinicaks --image=petclinicaksacr.azurecr.io/petclinic:latest
          kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
          kubectl get pods -A
          kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
