@@ -1,4 +1,4 @@
-# This workflow performs the following:
+# This workflow performs the following: test
 # - Database configuration
 # - Provisioning Azure Services  
 # - Create the spring-petclinic-AKS App on Docker
@@ -9,16 +9,16 @@
 # - Verify your container image
 #
 # Secrets required to be in place:
-# - AZURE_CREDENTIALS
+# - AZURE_CREDENTIALS -
 
 name: Build and Deploy Application
 env:
-  # This is the global resource prefix for this deployment
-  # Use lower case letters and numbers only
   DEPLOYMENT_NAME: "petclinicaks"
-
-  # Azure region to which the resources will be deployed
   DEPLOYMENT_REGION: "eastus"
+  LOCATION: "eastus"
+  ACR_NAME: "petclinicaksacr23"
+  CLUSTER_NAME: "aks-cluster"
+  RESOURCE_GROUP: "petclinicaks-rg"
 
 on:
   # Triggers the workflow on push events on the main branch
@@ -31,28 +31,76 @@ on:
   # We also want to be able to run this manually from Github
   workflow_dispatch:
 jobs:
-  build-and-deploy:
+  hub_networking_AKS_Cluster:  # deploy Hub Networking Infra
      runs-on: ubuntu-latest
      steps:
-
      - name: 'Checkout GitHub Action'
        uses: actions/checkout@main
-          
-     - name: 'Login via Azure CLI'
+     - name: Login to Azure 
        uses: azure/login@v1
        with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
-            
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: 'AzureCloud'
+        enable-AzPSSession: false
      - name: Azure CLI -Deploy Bicep Files
        uses: Azure/CLI@v1
        with:
         inlineScript: |
           #!/bin/bash
           az deployment sub create --template-file ./infra/aks-bicep/main.bicep --parameters ./infra/aks-bicep/parameters.json --location eastus
-          az postgres server create --resource-group petclinicaks-rg  --name petclinicaks-db  --location eastus --admin-user petclinicaksadmin --admin-password petclinicAKS123** --sku-name GP_Gen5_2
+          az postgres server create --resource-group petclinicaks-rg --name petclinicaks-db23  --location eastus --admin-user petclinicaksadmin --admin-password petclinicAKS123** --sku-name GP_Gen5_2
 
-     # Build Java Application
-     - name: Build Java Application
+  build_Java_App: # Build the Java Application 
+     runs-on: ubuntu-latest
+     needs: hub_networking_AKS_Cluster
+     steps:
+     - name: Login to Azure 
+       uses: azure/login@v1
+       with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: 'AzureCloud'
+        enable-AzPSSession: false
+     - name: checkout code
+       uses: actions/checkout@v3
+     - name: Set up JDK 11
+       uses: actions/setup-java@v3
+       with:
+          java-version: '11'
+          distribution: 'adopt'
+     # Build Java Application    
+     - name: Build with Maven, compile and build the Docker image
+       run: |
+        mvn spring-boot:build-image
+     # Azure Powershell Cli - ACR Login, Tag Image, Push Image, Update ACR, Attach ACR to Cluster, Create Pod   
+     - name: Azure Powershell Cli - ACR Login, Tag Image, Push Image
+       uses: azure/powershell@v1
+       with:
+        inlineScript: |
+         #!/bin/bash
+         az acr login --name petclinicaksacr23
+         docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacr23.azurecr.io/petclinic
+         docker push petclinicaksacr23.azurecr.io/petclinic
+        azPSVersion: "latest"
+     - name: Set the target AKS cluster.
+       uses: Azure/aks-set-context@v1
+       with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: ${{ env.CLUSTER_NAME }}
+        resource-group: petclinicaks-rg
+     - name: Azure Powershell Cli - Update ACR, Attach ACR to Cluster, Create Service and Expose the Pod
+       uses: azure/powershell@v1
+       with:
+        inlineScript: |
+         #!/bin/bash
+         az aks get-credentials --resource-group petclinicaks-rg --name ${{ env.CLUSTER_NAME }}
+         az aks update --resource-group=petclinicaks-rg --name=${{ env.CLUSTER_NAME }} --attach-acr ${{ env.ACR_NAME }}
+         kubectl run petclinicaks --image=petclinicaksacr23.azurecr.io/petclinic:latest
+         kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
+         kubectl get pods -A
+         kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
+        azPSVersion: "latest"
+     # Re-Build Java Application  
+     - name: Re-Build Java Application
        uses: actions/checkout@v3
      - name: Set up JDK 11
        uses: actions/setup-java@v3
@@ -62,39 +110,11 @@ jobs:
      - name: Build with Maven, compile and build the Docker image
        run: |
         mvn spring-boot:build-image
-
-     # Azure Powershell Cli - ACR Login, Tag Image, Push Image, Update ACR, Attach ACR to Cluster, Create Pod
-     - name: Azure Powershell Cli - ACR Login, Tag Image, Push Image, Update ACR, Attach ACR to Cluster, Create Pod
-       uses: azure/powershell@v1
-       with:
-        inlineScript: |
-         #!/bin/bash
-         az acr login --name petclinicaksacraz
-         docker tag docker.io/library/spring-petclinic:2.7.0-SNAPSHOT petclinicaksacraz.azurecr.io/petclinic
-         docker push petclinicaksacraz.azurecr.io/petclinic
-         az aks get-credentials --resource-group petclinicaks-rg --name aks-cluster
-         az aks update --resource-group=petclinicaks-rg --name=aks-cluster --attach-acr petclinicaksacraz
-         kubectl run petclinicaks --image=petclinicaksacraz.azurecr.io/petclinic
-         kubectl expose pod petclinicaks --type=LoadBalancer --port=80 --target-port=8080
-         kubectl get pods -A
-        azPSVersion: "latest"
-
-     # Re-Build Java Application
-     - name: Re-Build Java Application
-       uses: actions/checkout@v3
-     - name: Re-Set up JDK 11
-       uses: actions/setup-java@v3
-       with:
-          java-version: '11'
-          distribution: 'adopt'
-     - name: Build with Maven, compile and build the Docker image
-       run: |
-        mvn spring-boot:build-image
-    
-     # Azure Powershell Cli - Get deployment IP Address 
+    # Azure Powershell Cli - Get deployment IP Address   
      - name: Azure Powershell Cli - Get deployment IP Address 
        uses: azure/powershell@v1
        with:
         inlineScript: | 
          kubectl get service petclinicaks
+         kubectl get services -o=jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}'
         azPSVersion: "latest"
