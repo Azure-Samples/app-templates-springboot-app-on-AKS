@@ -35,13 +35,13 @@ jobs:
      - name: 'Checkout GitHub Action'
        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
      - name: Login to Azure 
-       uses: azure/login@cb79c773a3cfa27f31f25eb3f677781210c9ce3d # v1.6.1
+       uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
        with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         environment: 'AzureCloud'
         enable-AzPSSession: false
      - name: Azure CLI -Deploy Bicep Files
-       uses: Azure/CLI@4db43908b9df2e7ac93c8275a8f9a448c59338dd # v1.0.9
+       uses: Azure/CLI@9eb25b8360668fb0ecbafa808d40e2197b2f5f52 # v3.0.0
        with:
         inlineScript: |
           #!/bin/bash
@@ -53,15 +53,15 @@ jobs:
      needs: hub_networking_AKS_Cluster
      steps:
      - name: Login to Azure 
-       uses: azure/login@cb79c773a3cfa27f31f25eb3f677781210c9ce3d # v1.6.1
+       uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
        with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         environment: 'AzureCloud'
         enable-AzPSSession: false
      - name: checkout code
-       uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
+       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
      - name: Set up JDK 11
-       uses: actions/setup-java@e9fbacdec3bb3b6036605a3e6f7995d66773a8c6 # v3.14.2
+       uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
        with:
           java-version: '11'
           distribution: 'adopt'
@@ -71,7 +71,7 @@ jobs:
         mvn spring-boot:build-image
      # Azure Powershell Cli - ACR Login, Tag Image, Push Image, Update ACR, Attach ACR to Cluster, Create Pod   
      - name: Azure Powershell Cli - ACR Login, Tag Image, Push Image
-       uses: azure/powershell@1300bbd2b3e1c21c029fe34887d16d2809a1397f # v1.4.0
+       uses: azure/powershell@f5b8adcfff1904872c7b98d4012d4914d74b1a82 # v3.0.0
        with:
         inlineScript: |
          #!/bin/bash
@@ -80,13 +80,13 @@ jobs:
          docker push petclinicaksacr.azurecr.io/petclinic
         azPSVersion: "latest"
      - name: Set the target AKS cluster.
-       uses: Azure/aks-set-context@7c9ab34bd2d84638c17a3b1d9863797ca29516a0 # v1
+       uses: Azure/aks-set-context@883bdc8d8d1d0fd87e66cc4ba6f0b618f9eb5281 # v5.0.1
        with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ env.CLUSTER_NAME }}
         resource-group: petclinicaks-amrg
      - name: Azure Powershell Cli - Update ACR, Attach ACR to Cluster, Create Service and Expose the Pod
-       uses: azure/powershell@1300bbd2b3e1c21c029fe34887d16d2809a1397f # v1.4.0
+       uses: azure/powershell@f5b8adcfff1904872c7b98d4012d4914d74b1a82 # v3.0.0
        with:
         inlineScript: |
          #!/bin/bash
@@ -99,9 +99,9 @@ jobs:
         azPSVersion: "latest"
      # Re-Build Java Application  
      - name: Re-Build Java Application
-       uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
+       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
      - name: Set up JDK 11
-       uses: actions/setup-java@e9fbacdec3bb3b6036605a3e6f7995d66773a8c6 # v3.14.2
+       uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
        with:
           java-version: '11'
           distribution: 'adopt'
@@ -110,7 +110,7 @@ jobs:
         mvn spring-boot:build-image
     # Azure Powershell Cli - Get deployment IP Address   
      - name: Azure Powershell Cli - Get deployment IP Address 
-       uses: azure/powershell@1300bbd2b3e1c21c029fe34887d16d2809a1397f # v1.4.0
+       uses: azure/powershell@f5b8adcfff1904872c7b98d4012d4914d74b1a82 # v3.0.0
        with:
         inlineScript: | 
          kubectl get service petclinicaks
